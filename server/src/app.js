@@ -95,6 +95,14 @@ if (process.env.NODE_ENV !== 'production') {
 
 // ─── 5. Routes ───────────────────────────────────────────────────────
 
+// Root endpoint (prevents 404 errors in Render logs on pings)
+app.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'Welcome to the TaskFlow API',
+  });
+});
+
 // Health check endpoint
 app.get('/api/v1/healthcheck', (req, res) => {
   res.status(200).json({
