@@ -21,6 +21,33 @@ dotenv.config({ path: './.env' });
 
 const PORT = process.env.PORT || 5000;
 
+// Self-ping function to keep Render Free Tier awake
+const startSelfPing = () => {
+  const url = process.env.RENDER_EXTERNAL_URL;
+  if (!url) {
+    console.log('ℹ️ RENDER_EXTERNAL_URL not set. Skipping self-ping (running locally).');
+    return;
+  }
+
+  // Ping every 10 minutes (Render free tier sleeps after 15 minutes of inactivity)
+  const INTERVAL = 10 * 60 * 1000;
+
+  console.log(`⏱️ Self-ping initialized. Target: ${url}`);
+
+  setInterval(async () => {
+    try {
+      const res = await fetch(`${url}/api/v1/healthcheck`);
+      if (res.ok) {
+        console.log(`✅ Self-ping successful: ${res.status} at ${new Date().toISOString()}`);
+      } else {
+        console.warn(`⚠️ Self-ping returned status ${res.status} at ${new Date().toISOString()}`);
+      }
+    } catch (err) {
+      console.error('❌ Self-ping failed:', err.message);
+    }
+  }, INTERVAL);
+};
+
 connectDB()
   .then(() => {
     // Handle unhandled errors from Express
@@ -34,6 +61,9 @@ connectDB()
       console.log(`📋 API base URL: http://localhost:${PORT}/api/v1`);
       console.log(`🏥 Health check: http://localhost:${PORT}/api/v1/healthcheck`);
       console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}\n`);
+      
+      // Start the self-ping loop
+      startSelfPing();
     });
   })
   .catch((err) => {
