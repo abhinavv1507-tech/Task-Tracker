@@ -60,7 +60,7 @@ connectDB()
       throw error;
     });
 
-    app.listen(PORT, () => {
+    app.listen(PORT, '0.0.0.0', () => {
       console.log(`\n⚙️  Server is running at: http://localhost:${PORT}`);
       console.log(`📋 API base URL: http://localhost:${PORT}/api/v1`);
       console.log(`🏥 Health check: http://localhost:${PORT}/api/v1/healthcheck`);
