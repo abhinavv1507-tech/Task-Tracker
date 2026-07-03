@@ -14,6 +14,7 @@
  */
 
 import dotenv from 'dotenv';
+import https from 'https';
 import connectDB from './config/db.js';
 import { app } from './app.js';
 
@@ -34,14 +35,17 @@ const startSelfPing = () => {
 
   console.log(`⏱️ Self-ping initialized. Target: ${url}`);
 
-  setInterval(async () => {
+  setInterval(() => {
     try {
-      const res = await fetch(`${url}/api/v1/healthcheck`);
-      if (res.ok) {
-        console.log(`✅ Self-ping successful: ${res.status} at ${new Date().toISOString()}`);
-      } else {
-        console.warn(`⚠️ Self-ping returned status ${res.status} at ${new Date().toISOString()}`);
-      }
+      https.get(`${url}/api/v1/healthcheck`, (res) => {
+        if (res.statusCode === 200) {
+          console.log(`✅ Self-ping successful: ${res.statusCode} at ${new Date().toISOString()}`);
+        } else {
+          console.warn(`⚠️ Self-ping returned status ${res.statusCode} at ${new Date().toISOString()}`);
+        }
+      }).on('error', (err) => {
+        console.error('❌ Self-ping request error:', err.message);
+      });
     } catch (err) {
       console.error('❌ Self-ping failed:', err.message);
     }

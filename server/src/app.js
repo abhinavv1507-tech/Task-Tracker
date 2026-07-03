@@ -43,9 +43,12 @@ const app = express();
 app.use(helmet());
 
 // CORS: configured for the frontend origin via env variable
+const rawOrigin = process.env.CORS_ORIGIN || 'http://localhost:5173';
+const allowedOrigin = rawOrigin.endsWith('/') ? rawOrigin.slice(0, -1) : rawOrigin;
+
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+    origin: allowedOrigin,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization'],
