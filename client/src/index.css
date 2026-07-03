@@ -1199,11 +1199,52 @@ select.form-control {
 
 @media (max-width: 768px) {
   :root { --sidebar-width: 0px; }
-  .main-content { margin-left: 0; padding: var(--space-4); }
+
+  /* Push content below the mobile top bar */
+  .main-content {
+    margin-left: 0;
+    padding: var(--space-4);
+    padding-top: 68px;
+  }
+
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
   .task-grid  { grid-template-columns: 1fr; }
   .form-row   { grid-template-columns: 1fr; }
   .page-header { flex-direction: column; align-items: flex-start; gap: var(--space-3); }
+
+  /* Mobile top bar — sits at very top of screen */
+  .mobile-menu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 52px;
+    padding: 0 var(--space-4);
+    background: var(--bg-sidebar);
+    border-bottom: 1px solid var(--border-subtle);
+    border-radius: 0;
+    color: var(--text-primary);
+    cursor: pointer;
+    z-index: 150;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    /* Align icon to the left */
+    justify-content: flex-start;
+    gap: var(--space-3);
+    font-family: var(--font-headline);
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    transition: background var(--transition);
+  }
+  .mobile-menu-btn::after {
+    content: 'TaskFlow';
+    color: var(--ivory);
+  }
+  .mobile-menu-btn:hover { background: var(--bg-hover); }
 
   /* Sidebar slides off by default */
   .sidebar {
@@ -1216,7 +1257,7 @@ select.form-control {
   /* When open, slide in */
   .sidebar--open { transform: translateX(0); }
 
-  /* Backdrop that dims the page */
+  /* Backdrop */
   .sidebar-backdrop {
     position: fixed;
     inset: 0;
@@ -1225,27 +1266,6 @@ select.form-control {
     animation: fadeIn 0.2s ease;
   }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-  /* Hamburger button — top-left of page */
-  .mobile-menu-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: fixed;
-    top: var(--space-4);
-    left: var(--space-4);
-    z-index: 150;
-    width: 40px;
-    height: 40px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-sm);
-    color: var(--text-primary);
-    cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-    transition: background var(--transition);
-  }
-  .mobile-menu-btn:hover { background: var(--bg-hover); }
 
   /* Close (X) button inside the sidebar */
   .sidebar-close-btn {
@@ -1273,4 +1293,5 @@ select.form-control {
   .sidebar-close-btn { display: none; }
   .sidebar-backdrop { display: none; }
 }
+
 
